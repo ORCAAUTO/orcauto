@@ -46,10 +46,3 @@ O projeto usa `expo.web.output = static` e possui um workflow EAS Hosting que pu
 ## Build Android
 
 O `eas.json` possui o perfil `preview` configurado para gerar APK interno. O build exige a autenticação da conta Expo/EAS e as credenciais de build quando necessário.
-
-## Próximas etapas
-
-1. validar os fluxos em aparelho físico
-2. configurar credenciais EAS/build
-3. executar testes de integração ponta a ponta
-4. revisar notificações, pagamentos/assinaturas e publicação nas lojas
