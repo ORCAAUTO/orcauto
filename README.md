@@ -1,6 +1,6 @@
 # ORCAAUTO
 
-Aplicativo mobile Expo/React Native para conectar clientes e oficinas automotivas.
+Aplicativo mobile/web Expo/React Native para conectar clientes e oficinas automotivas.
 
 ## Stack
 
@@ -24,6 +24,7 @@ Aplicativo mobile Expo/React Native para conectar clientes e oficinas automotiva
 - chat em tempo real
 - CI de TypeScript
 - perfil EAS para APK de preview
+- exportação Web estática e workflow de publicação no EAS Hosting
 
 ## Supabase
 
@@ -38,9 +39,13 @@ npm install
 npx expo start
 ```
 
+## Web
+
+O projeto usa `expo.web.output = static` e possui um workflow EAS Hosting que publica a aplicação na URL de produção quando `main` recebe um commit.
+
 ## Build Android
 
-O `eas.json` possui o perfil `preview` configurado para gerar APK interno. O build ainda exige a autenticação da conta Expo e o vínculo final do projeto EAS.
+O `eas.json` possui o perfil `preview` configurado para gerar APK interno. O build exige a autenticação da conta Expo/EAS e as credenciais de build quando necessário.
 
 ## Próximas etapas
 
