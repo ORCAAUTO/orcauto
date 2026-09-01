@@ -7,18 +7,13 @@
     "scheme": "orcauto",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "plugins": ["expo-router"],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "android": {
-      "package": "com.orcauto.app"
-    },
-    "ios": {
-      "bundleIdentifier": "com.orcauto.app"
-    },
-    "web": {
-      "bundler": "metro"
-    }
+    "plugins": [
+      "expo-router",
+      ["expo-image-picker", { "photosPermission": "O ORCAAUTO precisa acessar suas fotos para anexar imagens ao pedido de serviço.", "cameraPermission": "O ORCAAUTO precisa usar a câmera para fotografar o problema do veículo.", "microphonePermission": false }]
+    ],
+    "experiments": { "typedRoutes": true },
+    "android": { "package": "com.orcauto.app" },
+    "ios": { "bundleIdentifier": "com.orcauto.app" },
+    "web": { "bundler": "metro" }
   }
 }
