@@ -1,0 +1,13 @@
+name: Build ORCAAUTO Android APK
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  build_android:
+    name: Build ORCAAUTO APK
+    type: build
+    params:
+      platform: android
+      profile: preview
