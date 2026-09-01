@@ -14,6 +14,6 @@
     "experiments": { "typedRoutes": true },
     "android": { "package": "com.orcauto.app" },
     "ios": { "bundleIdentifier": "com.orcauto.app" },
-    "web": { "bundler": "metro" }
+    "web": { "bundler": "metro", "output": "static" }
   }
 }
