@@ -4,23 +4,32 @@ Aplicativo mobile Expo/React Native para conectar clientes e oficinas automotiva
 
 ## Stack
 
-- Expo SDK 57 + Expo Router
+- Expo SDK 57 + React Native 0.86.3 + Expo Router
 - React Native + TypeScript
 - Supabase Auth, Postgres, Storage e Realtime
 - GitHub para versionamento
 - EAS para builds e distribuição
 
+## Fluxos implementados
+
+- autenticação e perfis cliente/oficina
+- dashboard por perfil
+- cadastro de veículos
+- solicitação de serviço
+- fotos da solicitação via câmera/galeria e Supabase Storage
+- consulta de oficinas
+- orçamentos e aceite/recusa
+- criação automática de serviço após aceite
+- acompanhamento de status do serviço
+- chat em tempo real
+- CI de TypeScript
+- perfil EAS para APK de preview
+
 ## Supabase
 
 Project ref: `pfjenyygroyikdenjhbd`
 
-Configure localmente:
-
-```bash
-copy .env.example .env
-```
-
-Preencha `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` com a chave publishable do projeto. Nunca commite `.env`.
+Configure localmente com `.env` e use somente a chave publishable do projeto. Nunca commite segredos.
 
 ## Desenvolvimento
 
@@ -29,23 +38,13 @@ npm install
 npx expo start
 ```
 
-Teste primeiro com Expo Go. Depois que os fluxos principais estiverem validados, configure o build EAS de produção.
+## Build Android
 
-## Arquitetura inicial
+O `eas.json` possui o perfil `preview` configurado para gerar APK interno. O build ainda exige a autenticação da conta Expo e o vínculo final do projeto EAS.
 
-```text
-src/
-  app/                 # rotas Expo Router
-  lib/                 # integrações externas
-```
+## Próximas etapas
 
-O banco já possui os principais domínios do produto: perfis, oficinas, veículos, solicitações, fotos, orçamentos, serviços, mensagens, avaliações e assinaturas.
-
-## Próximas etapas técnicas
-
-1. Sincronizar as migrations existentes do Supabase com este repositório.
-2. Completar autenticação e sessão.
-3. Implementar os fluxos cliente e oficina sobre o schema existente.
-4. Implementar fotos/Storage e mensagens/Realtime.
-5. Criar testes de integração para o fluxo solicitação → orçamento → aceite → serviço → avaliação.
-6. Configurar EAS e testar APK em aparelho físico.
+1. validar os fluxos em aparelho físico
+2. configurar credenciais EAS/build
+3. executar testes de integração ponta a ponta
+4. revisar notificações, pagamentos/assinaturas e publicação nas lojas
