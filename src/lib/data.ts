@@ -1,98 +1,18 @@
 import { supabase } from '@/lib/supabase'
 import type { Budget, Profile, Request, Service, Vehicle, Workshop, Message } from '@/lib/types'
 
-export async function getProfile(userId: string) {
-  const { data, error } = await supabase.from('profiles').select('id,nome,telefone,role,avatar_url').eq('id', userId).single()
-  if (error) throw error
-  return data as Profile
-}
-
-export async function getVehicles(userId: string) {
-  const { data, error } = await supabase.from('veiculos').select('*').eq('usuario_id', userId).order('created_at', { ascending: false })
-  if (error) throw error
-  return (data ?? []) as Vehicle[]
-}
-
-export async function createVehicle(userId: string, input: Pick<Vehicle, 'marca' | 'modelo' | 'ano' | 'placa' | 'cor' | 'quilometragem' | 'observacoes'>) {
-  const { data, error } = await supabase.from('veiculos').insert({ ...input, usuario_id: userId }).select().single()
-  if (error) throw error
-  return data as Vehicle
-}
-
-export async function getRequests(userId: string, role: 'cliente' | 'oficina') {
-  if (role === 'cliente') {
-    const { data, error } = await supabase.from('solicitacoes').select('*').eq('usuario_id', userId).order('created_at', { ascending: false })
-    if (error) throw error
-    return (data ?? []) as Request[]
-  }
-  const { data, error } = await supabase.from('solicitacoes').select('*').in('status', ['aberta', 'recebendo_orcamentos']).order('created_at', { ascending: false })
-  if (error) throw error
-  return (data ?? []) as Request[]
-}
-
-export async function createRequest(userId: string, input: Pick<Request, 'veiculo_id' | 'titulo' | 'descricao' | 'categoria' | 'urgencia' | 'cidade' | 'estado'>) {
-  const { data, error } = await supabase.from('solicitacoes').insert({ ...input, usuario_id: userId, status: 'aberta' }).select().single()
-  if (error) throw error
-  return data as Request
-}
-
-export async function getBudgetsForRequest(requestId: string) {
-  const { data, error } = await supabase.from('orcamentos').select('*').eq('solicitacao_id', requestId).order('created_at', { ascending: false })
-  if (error) throw error
-  return (data ?? []) as Budget[]
-}
-
-export async function getServices(userId: string, role: 'cliente' | 'oficina') {
-  if (role === 'cliente') {
-    const { data, error } = await supabase.from('servicos').select('*').order('created_at', { ascending: false })
-    if (error) throw error
-    return (data ?? []) as Service[]
-  }
-  const { data: workshop, error: workshopError } = await supabase.from('oficinas').select('id').eq('usuario_id', userId).single()
-  if (workshopError) throw workshopError
-  const { data, error } = await supabase.from('servicos').select('*').eq('oficina_id', workshop.id).order('created_at', { ascending: false })
-  if (error) throw error
-  return (data ?? []) as Service[]
-}
-
-export async function getWorkshops(city?: string, state?: string) {
-  const { data, error } = await supabase.rpc('listar_oficinas_publicas', { p_cidade: city || undefined, p_estado: state || undefined })
-  if (error) throw error
-  return (data ?? []) as Workshop[]
-}
-
-export async function getMessages(requestId: string) {
-  const { data, error } = await supabase.from('mensagens').select('*').eq('solicitacao_id', requestId).order('created_at', { ascending: true })
-  if (error) throw error
-  return (data ?? []) as Message[]
-}
-
-export async function sendMessage(userId: string, requestId: string, content: string) {
-  const { data, error } = await supabase.from('mensagens').insert({ solicitacao_id: requestId, remetente_id: userId, conteudo: content.trim(), tipo: 'texto' }).select().single()
-  if (error) throw error
-  return data as Message
-}
-
-export async function acceptBudget(budgetId: string) {
-  const { data, error } = await supabase.rpc('aceitar_orcamento', { p_orcamento_id: budgetId })
-  if (error) throw error
-  return data as Budget
-}
-
-export async function createServiceFromBudget(budgetId: string) {
-  const { data, error } = await supabase.rpc('criar_servico_orcamento_aceito', { p_orcamento_id: budgetId })
-  if (error) throw error
-  return data as Service
-}
-
-export async function rejectBudget(budgetId: string) {
-  const { data, error } = await supabase.rpc('recusar_orcamento', { p_orcamento_id: budgetId })
-  if (error) throw error
-  return data as Budget
-}
-
-export async function updateService(serviceId: string, status: Service['status'], observations?: string) {
-  const { data, error } = await supabase.from('servicos').update({ status, observacoes: observations }).eq('id', serviceId).select().single()
-  if (error) throw error
-  return data as Service
-}
+export async function getProfile(userId: string) { const { data, error } = await supabase.from('profiles').select('id,nome,telefone,role,avatar_url').eq('id', userId).single(); if (error) throw error; return data as Profile }
+export async function getVehicles(userId: string) { const { data, error } = await supabase.from('veiculos').select('*').eq('usuario_id', userId).order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as Vehicle[] }
+export async function createVehicle(userId: string, input: Pick<Vehicle, 'marca' | 'modelo' | 'ano' | 'placa' | 'cor' | 'quilometragem' | 'observacoes'>) { const { data, error } = await supabase.from('veiculos').insert({ ...input, usuario_id: userId }).select().single(); if (error) throw error; return data as Vehicle }
+export async function getRequests(userId: string, role: 'cliente' | 'oficina') { if (role === 'cliente') { const { data, error } = await supabase.from('solicitacoes').select('*').eq('usuario_id', userId).order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as Request[] } const { data, error } = await supabase.from('solicitacoes').select('*').in('status', ['aberta', 'recebendo_orcamentos']).order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as Request[] }
+export async function createRequest(userId: string, input: Pick<Request, 'veiculo_id' | 'titulo' | 'descricao' | 'categoria' | 'urgencia' | 'cidade' | 'estado'>) { const { data, error } = await supabase.from('solicitacoes').insert({ ...input, usuario_id: userId, status: 'aberta' }).select().single(); if (error) throw error; return data as Request }
+export async function uploadRequestPhoto(userId: string, requestId: string, uri: string, mimeType = 'image/jpeg', caption?: string) { const response = await fetch(uri); const body = await response.arrayBuffer(); const ext = mimeType.includes('png') ? 'png' : mimeType.includes('webp') ? 'webp' : 'jpg'; const path = `${userId}/${requestId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`; const { error: uploadError } = await supabase.storage.from('solicitacoes-fotos').upload(path, body, { contentType: mimeType, upsert: false }); if (uploadError) throw uploadError; const { data, error } = await supabase.from('fotos_solicitacoes').insert({ solicitacao_id: requestId, usuario_id: userId, storage_path: path, legenda: caption ?? null }).select().single(); if (error) { await supabase.storage.from('solicitacoes-fotos').remove([path]); throw error } return data }
+export async function getBudgetsForRequest(requestId: string) { const { data, error } = await supabase.from('orcamentos').select('*').eq('solicitacao_id', requestId).order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as Budget[] }
+export async function getServices(userId: string, role: 'cliente' | 'oficina') { if (role === 'cliente') { const { data, error } = await supabase.from('servicos').select('*').order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as Service[] } const { data: workshop, error: workshopError } = await supabase.from('oficinas').select('id').eq('usuario_id', userId).single(); if (workshopError) throw workshopError; const { data, error } = await supabase.from('servicos').select('*').eq('oficina_id', workshop.id).order('created_at', { ascending: false }); if (error) throw error; return (data ?? []) as Service[] }
+export async function getWorkshops(city?: string, state?: string) { const { data, error } = await supabase.rpc('listar_oficinas_publicas', { p_cidade: city || undefined, p_estado: state || undefined }); if (error) throw error; return (data ?? []) as Workshop[] }
+export async function getMessages(requestId: string) { const { data, error } = await supabase.from('mensagens').select('*').eq('solicitacao_id', requestId).order('created_at', { ascending: true }); if (error) throw error; return (data ?? []) as Message[] }
+export async function sendMessage(userId: string, requestId: string, content: string) { const { data, error } = await supabase.from('mensagens').insert({ solicitacao_id: requestId, remetente_id: userId, conteudo: content.trim(), tipo: 'texto' }).select().single(); if (error) throw error; return data as Message }
+export async function acceptBudget(budgetId: string) { const { data, error } = await supabase.rpc('aceitar_orcamento', { p_orcamento_id: budgetId }); if (error) throw error; return data as Budget }
+export async function createServiceFromBudget(budgetId: string) { const { data, error } = await supabase.rpc('criar_servico_orcamento_aceito', { p_orcamento_id: budgetId }); if (error) throw error; return data as Service }
+export async function rejectBudget(budgetId: string) { const { data, error } = await supabase.rpc('recusar_orcamento', { p_orcamento_id: budgetId }); if (error) throw error; return data as Budget }
+export async function updateService(serviceId: string, status: Service['status'], observations?: string) { const { data, error } = await supabase.from('servicos').update({ status, observacoes: observations }).eq('id', serviceId).select().single(); if (error) throw error; return data as Service }
