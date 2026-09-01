@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "ORCAAUTO",
+    "slug": "orcauto",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "orcauto",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.orcauto.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.orcauto.app"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
