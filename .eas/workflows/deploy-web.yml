@@ -2,12 +2,12 @@ name: Deploy ORCAAUTO Web
 
 on:
   push:
-    branches:
-      - main
+    branches: ['main']
 
 jobs:
-  deploy:
-    type: deploy
+  deploy_web:
     name: Deploy ORCAAUTO Web
+    type: deploy
+    environment: production
     params:
       prod: true
