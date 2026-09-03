@@ -8,6 +8,18 @@ import type { Profile } from '@/lib/types'
 type AuthContextValue = { session: Session | null; profile: Profile | null; loading: boolean; signOut: () => Promise<void> }
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
+async function loadOrCreateProfile(session: Session) {
+  const existing = await getProfile(session.user.id).catch(() => null)
+  if (existing) return existing
+
+  const metadata = session.user.user_metadata ?? {}
+  const nome = typeof metadata.nome === 'string' && metadata.nome.trim().length >= 2 ? metadata.nome.trim() : 'Usuário'
+  const role = metadata.role === 'oficina' ? 'oficina' : 'cliente'
+  const { error } = await supabase.from('profiles').insert({ id: session.user.id, nome, role })
+  if (error && error.code !== '23505') throw error
+  return getProfile(session.user.id)
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -21,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true
     if (!session?.user.id) { setProfile(null); return }
-    getProfile(session.user.id).then((data) => { if (active) setProfile(data) }).catch(() => { if (active) setProfile(null) })
+    loadOrCreateProfile(session).then((data) => { if (active) setProfile(data) }).catch(() => { if (active) setProfile(null) })
     return () => { active = false }
   }, [session?.user.id])
   const value = useMemo(() => ({ session, profile, loading, signOut: async () => { await supabase.auth.signOut() } }), [session, profile, loading])
