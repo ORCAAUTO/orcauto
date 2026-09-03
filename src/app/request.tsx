@@ -43,9 +43,16 @@ export default function RequestScreen() {
   }
 
   async function submit() {
-    if (!session || !vehicleId || title.trim().length < 3 || description.trim().length < 10 || city.trim().length < 2 || state.trim().length !== 2) {
-      return Alert.alert('Confira os dados', 'Selecione um veículo e preencha título, descrição, cidade e UF.')
-    }
+    const uf = state.trim().toUpperCase()
+    const errors: string[] = []
+    if (!session) errors.push('sessão de usuário')
+    if (!vehicleId) errors.push('veículo')
+    if (title.trim().length < 3) errors.push('título (mínimo 3 caracteres)')
+    if (description.trim().length < 5) errors.push('descrição (mínimo 5 caracteres)')
+    if (city.trim().length < 2) errors.push('cidade')
+    if (uf.length !== 2) errors.push('UF com 2 letras, por exemplo MG')
+    if (errors.length) return Alert.alert('Confira os dados', `Preencha corretamente: ${errors.join(', ')}.`)
+
     setSaving(true)
     try {
       const request = await createRequest(session.user.id, {
@@ -55,13 +62,14 @@ export default function RequestScreen() {
         categoria: category.trim() || null,
         urgencia: urgency,
         cidade: city.trim(),
-        estado: state.trim().toUpperCase(),
+        estado: uf,
       })
       for (const photo of photos) await uploadRequestPhoto(session.user.id, request.id, photo.uri, photo.mimeType || 'image/jpeg')
       Alert.alert('Solicitação enviada', 'Seu pedido e as fotos foram enviados para as oficinas.')
       router.replace('/requests')
     } catch (e) {
-      Alert.alert('Não foi possível enviar', e instanceof Error ? e.message : 'Tente novamente.')
+      const message = e instanceof Error ? e.message : 'Tente novamente.'
+      Alert.alert('Não foi possível enviar', message)
     } finally {
       setSaving(false)
     }
