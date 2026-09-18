@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FG BET — Demo</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#080b12;color:#f5f7fb}button{cursor:pointer;border:0}
+.top{background:linear-gradient(135deg,#111827,#080b12);padding:22px 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #202838;position:sticky;top:0;z-index:5}
+.logo{font-size:30px;font-weight:900;letter-spacing:2px}.logo span{color:#eab308}.balance{background:#151c29;border:1px solid #303b50;padding:10px 16px;border-radius:12px}.balance b{color:#facc15}
+.wrap{max-width:1200px;margin:auto;padding:30px 20px}.hero{padding:35px 0}.hero h1{font-size:48px;margin:0 0 10px}.hero p{color:#9ca8ba;font-size:18px}.notice{background:#241b08;border:1px solid #66500e;color:#f8d76a;padding:13px 16px;border-radius:12px;margin:20px 0}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.card{background:#111827;border:1px solid #263247;border-radius:18px;padding:20px;min-height:190px}.card h3{margin:8px 0}.icon{font-size:55px}.muted{color:#9ca8ba}.primary{background:#eab308;color:#111827;font-weight:800;padding:12px 18px;border-radius:10px}.secondary{background:#202a3a;color:white;padding:12px 18px;border-radius:10px}
+.modal{display:none;position:fixed;inset:0;background:#000b;align-items:center;justify-content:center;z-index:10}.modal.open{display:flex}.box{width:min(480px,92%);background:#101722;border:1px solid #334155;border-radius:20px;padding:25px}.box input{width:100%;padding:13px;margin:8px 0;background:#0a0f18;color:#fff;border:1px solid #334155;border-radius:9px}.row{display:flex;gap:10px;flex-wrap:wrap}.slot{background:#080b12;border:1px solid #303b50;border-radius:16px;padding:20px;text-align:center}.reels{display:flex;gap:10px;justify-content:center;margin:20px 0}.reel{font-size:55px;background:#151c29;border:1px solid #354157;border-radius:12px;padding:10px 16px;min-width:85px}.result{min-height:28px;color:#facc15;font-weight:800}.history{margin-top:30px}.item{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #202838}.win{color:#4ade80}.loss{color:#fb7185}
+footer{padding:40px 20px;text-align:center;color:#697588;font-size:13px}
+</style></head>
+<body>
+<header class="top"><div class="logo">FG <span>BET</span></div><div class="row"><div class="balance">Saldo demo: <b id="balance">R$ 1.000,00</b></div><button class="primary" onclick="openLogin()">Entrar</button></div></header>
+<main class="wrap">
+<section class="hero"><h1>FG BET</h1><p>Experiência de cassino em modo demonstração.</p><div class="notice">⚠️ DEMONSTRAÇÃO: este protótipo usa somente créditos fictícios. Não há depósitos, saques ou apostas com dinheiro real.</div></section>
+<section class="games">
+<div class="card"><div class="icon">🎰</div><h3>FG Slots</h3><p class="muted">Gire os rolos e teste sua sorte.</p><button class="primary" onclick="openGame('slot')">Jogar demo</button></div>
+<div class="card"><div class="icon">🎡</div><h3>Roleta</h3><p class="muted">Escolha vermelho, preto ou verde.</p><button class="secondary" onclick="openGame('roulette')">Jogar demo</button></div>
+<div class="card"><div class="icon">🃏</div><h3>Blackjack</h3><p class="muted">Área preparada para o próximo jogo.</p><button class="secondary" onclick="alert('Blackjack será incluído na próxima versão.')">Em breve</button></div>
+</section>
+<section class="history"><h2>Últimas jogadas</h2><div id="history"><div class="item"><span>Nenhuma jogada nesta sessão</span><span>—</span></div></div></section>
+</main>
+<footer>FG BET Demo • Jogo demonstrativo • Sem dinheiro real • 18+</footer>
+
+<div id="login" class="modal"><div class="box"><h2>Conta FG BET</h2><p class="muted">Crie uma conta local para testar a interface.</p><input id="name" placeholder="Nome"><input id="email" placeholder="E-mail" type="email"><div class="row"><button class="primary" onclick="login()">Criar conta demo</button><button class="secondary" onclick="closeModals()">Cancelar</button></div></div></div>
+<div id="game" class="modal"><div class="box"><button class="secondary" onclick="closeModals()">Fechar</button><div id="gameContent"></div></div></div>
+<script>
+let balance=1000, history=[];
+const fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function update(){document.getElementById('balance').textContent=fmt(balance);document.getElementById('history').innerHTML=history.length?history.slice(-8).reverse().map(x=>'<div class="item"><span>'+x.game+'</span><span class="'+(x.amount>=0?'win':'loss')+'">'+(x.amount>=0?'+':'')+fmt(x.amount)+'</span></div>').join(''):'<div class="item"><span>Nenhuma jogada nesta sessão</span><span>—</span></div>'}
+function openLogin(){document.getElementById('login').classList.add('open')}
+function closeModals(){document.querySelectorAll('.modal').forEach(x=>x.classList.remove('open'))}
+function login(){const n=document.getElementById('name').value.trim();if(!n)return alert('Informe seu nome.');closeModals();alert('Conta demo criada para '+n+'!')}
+function openGame(type){document.getElementById('game').classList.add('open');const c=document.getElementById('gameContent');if(type==='slot')slot(c);else roulette(c)}
+function slot(c){c.innerHTML='<h2>🎰 FG Slots</h2><p class="muted">Aposta demo: R$ 10</p><div class="slot"><div class="reels"><div class="reel" id="r1">🍒</div><div class="reel" id="r2">🍋</div><div class="reel" id="r3">⭐</div></div><div class="result" id="res"></div><button class="primary" onclick="spin()">GIRAR — R$ 10</button></div>'}
+function spin(){if(balance<10)return alert('Saldo demo insuficiente.');balance-=10;const a=['🍒','🍋','⭐','7️⃣','💎'];const r=[0,0,0].map(()=>a[Math.floor(Math.random()*a.length)]);r.forEach((v,i)=>document.getElementById('r'+(i+1)).textContent=v);let win=0;if(r[0]===r[1]&&r[1]===r[2])win=r[0]==='7️⃣'?100:50;else if(r[0]===r[1]||r[1]===r[2]||r[0]===r[2])win=20;if(win){balance+=win;document.getElementById('res').textContent='🎉 Prêmio demo: '+fmt(win);history.push({game:'FG Slots',amount:win-10})}else{document.getElementById('res').textContent='Não ganhou nesta rodada';history.push({game:'FG Slots',amount:-10})}update()}
+function roulette(c){c.innerHTML='<h2>🎡 Roleta</h2><p class="muted">Escolha uma cor • aposta demo R$ 10</p><div class="row"><button class="primary" onclick="bet(\'vermelho\')">🔴 Vermelho</button><button class="secondary" onclick="bet(\'preto\')">⚫ Preto</button><button class="secondary" onclick="bet(\'verde\')">🟢 Verde</button></div><div class="result" id="rouletteRes" style="margin-top:20px"></div>'}
+function bet(choice){if(balance<10)return alert('Saldo demo insuficiente.');balance-=10;const n=Math.floor(Math.random()*37),color=n===0?'verde':n%2?'vermelho':'preto';const win=color===choice?(color==='verde'?100:20):0;if(win){balance+=win;history.push({game:'Roleta',amount:win-10});document.getElementById('rouletteRes').textContent='Saiu '+n+' '+color+' — prêmio demo '+fmt(win)}else{history.push({game:'Roleta',amount:-10});document.getElementById('rouletteRes').textContent='Saiu '+n+' '+color+' — não ganhou'}update()}
+update();
+</script></body></html>
